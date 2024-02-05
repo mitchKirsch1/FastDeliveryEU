@@ -1,5 +1,5 @@
 <?php
-
+include 'session_check.php';
 // Databaseverbinding
 include('db_connect.php');
 
@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $keyNumber = $_POST['keyNumber'];
     $user = substr($_POST['user'], 0, 20); // Beperk gebruikersnaam tot maximaal 20 tekens
 
+
     // Voeg sleutelinformatie toe aan de database
     $sql = "INSERT INTO registraties (datum, tijd, sleutelnummer, gebruiker) VALUES ('$datum', '$tijd', '$keyNumber', '$user')";
 
@@ -21,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: index.php'); // Redirect naar dezelfde pagina na succesvolle toevoeging
         exit();
     } else {
-        echo "Fout bij toevoegen sleutel: " . $conn->error;
+        echo "Fout bij toevoegen sleutelregistratie: " . $conn->error;
     }
 }
 ?>
@@ -35,8 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+<div class="logout-button">
+<form action="logout.php" method="post">
+    <input type="submit" value="Logout" class="button">
+</form>
+    </div>
     <!-- Alles button rechts boven -->
-    <a href="agenda.php" class="all-button">Alles</a>
+    <a href="agenda.php" class="all-button">Agenda</a>
 
     <form method="post" action="" class="registration-form">
         <h1>Sleutelregistratie</h1>
@@ -65,7 +71,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ?>
 
     <?php
-    // Oude code voor het tonen van sleutelregistraties is hier verwijderd
+    // Haal alle sleutelregistraties van vandaag op uit de database
+    $result = $conn->query("SELECT * FROM registraties WHERE datum = CURDATE() ORDER BY tijd DESC");
+
+    // Toon het logboek in een tabel
+    if ($result->num_rows > 0) {
+        echo "<h2>Logboek sleutelregistraties vandaag:</h2>";
+        echo "<table>";
+        echo "<tr><th>Datum</th><th>Tijd</th><th>Gebruiker</th><th>Sleutelnummer</th></tr>";
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr><td>" . $row['datum'] . "</td><td>" . $row['tijd'] . "</td><td>" . $row['gebruiker'] . "</td><td>" . $row['sleutelnummer'] . "</td></tr>";
+        }
+        echo "</table>";
+    } else {
+        echo "<p>Geen sleutelregistraties gevonden voor vandaag.</p>";
+    }
+
+    $conn->close();
     ?>
 </body>
 </html>
