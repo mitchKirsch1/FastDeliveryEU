@@ -8,8 +8,11 @@
 </head>
 <body>
     <?php
+    //login
+    include 'session_check.php';
     // Databaseverbinding
     include('db_connect.php');
+    
 
     // Functie om de dagen van de maand op te halen
     function getMonthDays($year, $month) {
