@@ -1,6 +1,6 @@
 <?php
 //login
-require 'session_check.php';
+require ('session_check.php');
 // Databaseverbinding
 include('db_connect.php');
 

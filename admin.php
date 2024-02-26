@@ -1,12 +1,6 @@
 <?php
-session_start();
 
-// Zorg ervoor dat alleen ingelogde gebruikers toegang hebben
-if (!isset($_SESSION['ingelogd']) || $_SESSION['ingelogd'] !== true) {
-    header("Location: login.php");
-    exit;
-}
-
+require ('session_check.php');
 include 'db_connect.php'; // Databaseverbinding
 
 // Wachtwoord wijzigen
