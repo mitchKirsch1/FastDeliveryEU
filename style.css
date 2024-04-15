@@ -140,3 +140,8 @@ th {
     cursor: pointer;
     border-radius: 5px;
 }
+.all-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
